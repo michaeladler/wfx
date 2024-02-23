@@ -10,45 +10,48 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     name: Build
+    runs-on: ubuntu-latest
+    container: golang:1.22
+    strategy:
+      matrix:
+        # even though Windows is not officially supported, we want it to at least compile successfully
+        goos: [linux, windows]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Setup Golang caches
+        uses: actions/cache@v4
         with:
-          go-version: stable
-      - uses: korandoru/setup-zig@v1
-        with:
-          zig-version: 0.12.0
-      - run: |
-          # goreleaser requires an absolute path to the compiler
-          install -m0755 .ci/zcc /usr/local/bin/zcc
-      - name: build wfx
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          distribution: goreleaser
-          version: latest
-          args: build --clean --single-target --snapshot
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
+      - name: Disable git security features
+        run: git config --global safe.directory '*'
+      - run: .ci/setup-build.sh
+      - name: build for ${{ matrix.goos }}
+        run: just build
         env:
-          CC: /usr/local/bin/zcc
-      - name: build plugins and contrib
-        run: make -s plugins contrib
-      - name: build for Windows
-        # even though not officially supported, we want it at least to compile successfully
-        run: make -s default plugins
-        env:
-          CC: /usr/local/bin/zcc
-          GOOS: windows
-          GOARCH: amd64
+          GOOS: ${{ matrix.goos }}
+          # GOFLAGS: -buildvcs=false # .git permission issues inside container
 
   test:
-    runs-on: ubuntu-latest
     name: Test
+    runs-on: ubuntu-latest
+    container: golang:1.22
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Setup Golang caches
+        uses: actions/cache@v4
         with:
-          go-version: stable
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
       - run: make test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -59,7 +62,7 @@ jobs:
   test-postgres:
     runs-on: ubuntu-latest
     name: Test PostgreSQL
-    container: golang:latest
+    container: golang:1.22
     services:
       postgres:
         image: postgres:15
@@ -79,7 +82,17 @@ jobs:
           --health-retries 20
     steps:
       - uses: actions/checkout@v4
-      - run: go test -timeout 180s -race -coverprofile=coverage.out -covermode=atomic -tags testing,integration,postgres,sqlite,plugin ./...
+      - name: Setup Golang caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
+      - run: .ci/setup-postgres.sh
+      - run: just postgres-integration-test
         env:
           PGHOST: postgres
           PGPORT: 5432
@@ -97,7 +110,7 @@ jobs:
   test-mysql:
     runs-on: ubuntu-latest
     name: Test MySQL
-    container: golang:latest
+    container: golang:1.22
     services:
       mysql:
         image: mysql:8-debian
@@ -116,7 +129,17 @@ jobs:
           --health-retries 20
     steps:
       - uses: actions/checkout@v4
-      - run: go test -timeout 180s -race -coverprofile=coverage.out -covermode=atomic -tags testing,integration,mysql,sqlite,plugin ./...
+      - name: Setup Golang caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
+      - run: .ci/setup-mysql.sh
+      - run: just mysql-integration-test
         env:
           MYSQL_DATABASE: wfx
           MYSQL_ROOT_PASSWORD: root
@@ -133,7 +156,7 @@ jobs:
   cli-tests:
     name: CLI Tests
     runs-on: ubuntu-latest
-    container: debian:testing-slim
+    container: golang:1.22
     services:
       mysql:
         image: mysql:8-debian
@@ -167,11 +190,19 @@ jobs:
           --health-timeout 5s
           --health-retries 20
     steps:
-      - name: Install packages
-        run: apt-get update -q && apt-get install -y --no-install-recommends bats make gcc libc6-dev golang git curl openssl jq systemd ca-certificates procps
       - uses: actions/checkout@v4
         with:
           submodules: "true"
+      - name: Setup Golang caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
+      - run: .ci/setup-cli-tests.sh
       - name: Disable git security features
         run: git config --global safe.directory '*'
       - name: build wfx
@@ -196,38 +227,32 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint
+    container: golang:1.22
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: stable
-      - uses: dominikh/staticcheck-action@v1.3.1
-        with:
-          install-go: false
-          build-tags: sqlite,testing,plugin
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v5
-        with:
-          version: latest
-          args: --build-tags=sqlite,testing,plugin
-          skip-cache: true
+      - name: Disable git security features
+        run: git config --global safe.directory '*'
+      - run: .ci/setup-lint.sh
+      - run: just lint
+
+  reuse:
+    runs-on: ubuntu-latest
+    name: Reuse
+    container:
+      image: fsfe/reuse:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: reuse lint || true # just a warning
 
   generate:
     name: Generate Code
     runs-on: ubuntu-latest
-    container:
-      image: archlinux
+    container: golang:1.22
     steps:
-      - name: Install packages
-        run: pacman -Syu --noconfirm python-yaml git just flatbuffers go-swagger gofumpt
-      - uses: actions/setup-go@v5
-        with:
-          go-version: stable
       - uses: actions/checkout@v4
+      - name: Install packages
+        run: .ci/setup-generate.sh
       - name: Disable git security features
         run: git config --global safe.directory '*'
-      - uses: brokeyourbike/go-mockery-action@v0
-        with:
-          mockery-version: "2.42.1"
       - run: just generate
       - run: git diff --exit-code
