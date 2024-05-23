@@ -1,8 +1,8 @@
 module github.com/siemens/wfx
 
-go 1.21
+go 1.22
 
-toolchain go1.21.5
+toolchain go1.22.3
 
 require (
 	entgo.io/ent v0.13.1
@@ -53,7 +53,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.19.1-0.20240203083654-5948b60a8e43 // indirect
+	ariga.io/atlas v0.21.1 // indirect
 	github.com/PaesslerAG/gval v1.2.0 // indirect
 	github.com/PaesslerAG/jsonpath v0.1.1 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
@@ -62,7 +62,7 @@ require (
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-openapi/inflect v0.19.0 // indirect
+	github.com/go-openapi/inflect v0.21.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
