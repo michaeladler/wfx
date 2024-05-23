@@ -12,7 +12,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: golang:1.22
+    container: golang:1.22@sha256:f43c6f049f04cbbaeb28f0aad3eea15274a7d0a7899a617d0037aec48d7ab010
     strategy:
       matrix:
         # even though Windows is not officially supported, we want it to at least compile successfully
@@ -40,7 +40,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    container: golang:1.22
+    container: golang:1.22@sha256:f43c6f049f04cbbaeb28f0aad3eea15274a7d0a7899a617d0037aec48d7ab010
     steps:
       - uses: actions/checkout@v4
       - name: Setup Golang caches
@@ -62,10 +62,10 @@ jobs:
   test-postgres:
     runs-on: ubuntu-latest
     name: Test PostgreSQL
-    container: golang:1.22
+    container: golang:1.22@sha256:f43c6f049f04cbbaeb28f0aad3eea15274a7d0a7899a617d0037aec48d7ab010
     services:
       postgres:
-        image: postgres:15
+        image: postgres:15@sha256:4b4da96c37fefd6f28c3f58e7470bbc6d2cb34ac5641b9df7221d962eb4bc55d
         env:
           # see https://hub.docker.com/_/postgres
           POSTGRES_HOST: postgres
@@ -110,10 +110,10 @@ jobs:
   test-mysql:
     runs-on: ubuntu-latest
     name: Test MySQL
-    container: golang:1.22
+    container: golang:1.22@sha256:f43c6f049f04cbbaeb28f0aad3eea15274a7d0a7899a617d0037aec48d7ab010
     services:
       mysql:
-        image: mysql:8-debian
+        image: mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33
         env:
           # see https://hub.docker.com/_/mysql
           MYSQL_DATABASE: wfx
@@ -156,10 +156,10 @@ jobs:
   cli-tests:
     name: CLI Tests
     runs-on: ubuntu-latest
-    container: golang:1.22
+    container: golang:1.22@sha256:f43c6f049f04cbbaeb28f0aad3eea15274a7d0a7899a617d0037aec48d7ab010
     services:
       mysql:
-        image: mysql:8-debian
+        image: mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33
         env:
           # see https://hub.docker.com/_/mysql
           MYSQL_DATABASE: wfx
@@ -174,7 +174,7 @@ jobs:
           --health-timeout 5s
           --health-retries 20
       postgres:
-        image: postgres:15
+        image: postgres:15@sha256:4b4da96c37fefd6f28c3f58e7470bbc6d2cb34ac5641b9df7221d962eb4bc55d
         env:
           # see https://hub.docker.com/_/postgres
           POSTGRES_HOST: postgres
@@ -227,7 +227,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint
-    container: golang:1.22
+    container: golang:1.22@sha256:f43c6f049f04cbbaeb28f0aad3eea15274a7d0a7899a617d0037aec48d7ab010
     steps:
       - uses: actions/checkout@v4
       - name: Disable git security features
@@ -239,7 +239,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Reuse
     container:
-      image: fsfe/reuse:latest
+      image: fsfe/reuse:latest@sha256:985ca841881779fa56560cd8478821270e78e4f23e21d7d741370a4abba3c654
     steps:
       - uses: actions/checkout@v4
       - run: reuse lint || true # just a warning
@@ -247,7 +247,7 @@ jobs:
   generate:
     name: Generate Code
     runs-on: ubuntu-latest
-    container: golang:1.22
+    container: golang:1.22@sha256:f43c6f049f04cbbaeb28f0aad3eea15274a7d0a7899a617d0037aec48d7ab010
     steps:
       - uses: actions/checkout@v4
       - name: Install packages
