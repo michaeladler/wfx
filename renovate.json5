@@ -30,5 +30,5 @@
     },
   ],
   // see https://breejs.github.io/later/parsers.html#text
-  schedule: ["on the first day of the week"],
+  // schedule: ["on the first day of the week"],
 }
