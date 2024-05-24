@@ -1,23 +1,15 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    "config:base",
-    "docker:pinDigests",
+    "config:best-practices",
     ":gitSignOff",
-    "group:allNonMajor",
     ":semanticCommits",
     ":prHourlyLimitNone",
     ":prConcurrentLimitNone",
+    // "schedule:monthly",
   ],
   assigneesFromCodeOwners: true,
   separateMajorMinor: true,
-  packageRules: [
-    {
-      matchManagers: ["gomod"],
-      matchDepTypes: ["indirect"],
-      enabled: true,
-    },
-  ],
   customManagers: [
     {
       customType: "regex",
@@ -28,6 +20,28 @@
       ],
     },
   ],
-  // see https://breejs.github.io/later/parsers.html#text
-  schedule: ["on the first day of the month"],
+  packageRules: [
+    // NOTE: Renovate will evaluate all packageRules and not stop once it gets a first match. Therefore, you should
+    // order your packageRules in order of importance so that later rules can override settings from earlier rules if
+    // necessary.
+    // group-slug is used for the branch name
+
+    {
+      groupName: "all non-major dependencies",
+      groupSlug: "all-minor-patch",
+      matchPackagePatterns: ["*"],
+      matchUpdateTypes: ["minor", "patch"],
+    },
+    {
+      // needed to maintain our hugo dependencies
+      matchManagers: ["gomod"],
+      matchDepTypes: ["indirect"],
+      enabled: true,
+    },
+    {
+      groupName: "all custom dependencies",
+      groupSlug: "all-custom",
+      matchDatasources: ["custom"],
+    },
+  ],
 }
