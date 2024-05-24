@@ -23,7 +23,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.17.0
 	github.com/google/flatbuffers v23.5.26+incompatible
 	github.com/gookit/color v1.5.4
-	github.com/itchyny/gojq v0.12.14
+	github.com/itchyny/gojq v0.12.15
 	github.com/jackc/pgx/v5 v5.5.5
 	github.com/knadh/koanf/parsers/yaml v0.1.0
 	github.com/knadh/koanf/providers/env v0.1.0
