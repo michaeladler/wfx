@@ -1,0 +1,33 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:base",
+    "docker:pinDigests",
+    ":gitSignOff",
+    "group:allNonMajor",
+    ":semanticCommits",
+    ":prHourlyLimitNone",
+    ":prConcurrentLimitNone",
+  ],
+  assigneesFromCodeOwners: true,
+  separateMajorMinor: true,
+  packageRules: [
+    {
+      matchManagers: ["gomod"],
+      matchDepTypes: ["indirect"],
+      enabled: true,
+    },
+  ],
+  customManagers: [
+    {
+      customType: "regex",
+      fileMatch: [".ci/versions.env"],
+      matchStringsStrategy: "any",
+      matchStrings: [
+        "export [A-Z]+_VERSION=(?<currentValue>.*) # (?<datasource>.*?)/(?<depName>.*?)(\\&versioning=(?<versioning>.*?))?\\s",
+      ],
+    },
+  ],
+  // see https://breejs.github.io/later/parsers.html#text
+  schedule: ["on the first day of the month"],
+}
