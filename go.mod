@@ -2,7 +2,7 @@ module github.com/siemens/wfx
 
 go 1.21
 
-toolchain go1.21.5
+toolchain go1.22.3
 
 require (
 	entgo.io/ent v0.13.1
