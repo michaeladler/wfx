@@ -1,10 +1,9 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    "config:base",
-    "docker:pinDigests",
+    "config:best-practices",
+    "schedule:monthly",
     ":gitSignOff",
-    "group:allNonMajor",
     ":semanticCommits",
     ":prHourlyLimitNone",
     ":prConcurrentLimitNone",
@@ -13,6 +12,7 @@
   separateMajorMinor: true,
   packageRules: [
     {
+      // needed to maintain our hugo dependencies
       matchManagers: ["gomod"],
       matchDepTypes: ["indirect"],
       enabled: true,
@@ -28,6 +28,4 @@
       ],
     },
   ],
-  // see https://breejs.github.io/later/parsers.html#text
-  schedule: ["on the first day of the month"],
 }
