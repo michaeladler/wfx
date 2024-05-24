@@ -2,14 +2,14 @@ module github.com/siemens/wfx
 
 go 1.21
 
-toolchain go1.21.5
+toolchain go1.22.3
 
 require (
 	entgo.io/ent v0.13.1
 	github.com/OpenPeeDeeP/xdg v1.0.0
 	github.com/Southclaws/fault v0.8.1
 	github.com/alexliesenfeld/health v0.8.0
-	github.com/approvals/go-approval-tests v0.0.0-20220530063708-32d5677069bd
+	github.com/approvals/go-approval-tests v0.0.0-20240417152556-434b9105e958
 	github.com/cnf/structhash v0.0.0-20201127153200-e1b16c1ebc08
 	github.com/coreos/go-systemd/v22 v22.5.0
 	github.com/go-openapi/errors v0.22.0
@@ -71,7 +71,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
 	github.com/itchyny/timefmt-go v0.1.5 // indirect
-	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa // indirect
+	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -88,7 +88,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/mod v0.15.0 // indirect
+	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 )
 
@@ -112,8 +112,8 @@ require (
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	go.mongodb.org/mongo-driver v1.14.0 // indirect
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
-	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
+	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
 	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sync v0.6.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 )
