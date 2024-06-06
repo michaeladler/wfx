@@ -51,5 +51,13 @@
       groupSlug: "all-custom",
       matchFileNames: [".ci/packages/versions.env"],
     },
+    {
+      groupName: "all pages dependencies",
+      groupSlug: "all-pages",
+      matchPackagePatterns: [
+        "github.com/google/docsy", // docsy and hugo must be compatible with each other
+        "gohugoio/hugo",
+      ],
+    },
   ],
 }
