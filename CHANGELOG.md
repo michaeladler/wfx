@@ -9,19 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `wfxctl workflow query` now accepts a `sort` param
+- Added (existing but undocumented) `/health` and `/version` endpoint to OpenAPI spec
+- OpenAPI v3 spec is served at `/api/wfx/v1/openapiv3.json`
+
+### Fixed
+
+- `wfx`: implemented sort functionality for `/workflows` endpoint
+
+### Changed
+
+- Migrated from Swagger to OpenAPI v3
+- The previous Swagger spec is still served at `/api/wfx/v1/swagger.json` (but no longer at the top level `/swagger.json`).
+  in order to *maintain compatibility* with older clients (e.g., SWUpdate <= 2024.12). The endpoint will be removed
+  in a future release.
+- `wfxctl workflow get` uses southbound API by default
+- `wfxctl health` validates the certificate chain when using TLS
+- Forbbiden requests (e.g. job creation via southbound API) now return HTTP status code 403 instead of 405
+- System certificates will be loaded automatically for TLS communication
+
+## [0.3.2] - 2024-09-03
+
 ### Fixed
 
 - `wfx` would not start if it was built without plugins support
 
-### Changed
-
-- Use zstd instead of xz to compress release tarballs
-
 ## [0.3.1] - 2024-07-09
-
-### Added
-
-### Fixed
 
 ### Changed
 
@@ -44,8 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Log messages from automaxprocs/maxprocs are now seamlessly integrated into existing logging framework
 
-### Removed
-
 ## [0.2.0] - 2024-01-15
 
 ### Added
@@ -67,8 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Empty or `null` arrays are omitted from JSON responses
 - Build requires Go >= 1.21
 
-### Removed
-
 ## [0.1.0] - 2023-02-06
 
 Initial release of wfx.
@@ -77,4 +86,5 @@ Initial release of wfx.
 [0.2.0]: https://github.com/siemens/wfx/releases/tag/v0.2.0
 [0.3.0]: https://github.com/siemens/wfx/releases/tag/v0.3.0
 [0.3.1]: https://github.com/siemens/wfx/releases/tag/v0.3.1
-[unreleased]: https://github.com/siemens/wfx/compare/v0.3.1...HEAD
+[0.3.2]: https://github.com/siemens/wfx/releases/tag/v0.3.2
+[unreleased]: https://github.com/siemens/wfx/compare/v0.3.2...HEAD
