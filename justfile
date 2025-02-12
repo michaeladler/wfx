@@ -89,20 +89,17 @@ format:
     just --fmt --unstable
 
 _generate-openapi:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    source "{{ THISDIR }}/.ci/packages/versions.env"
+    #!/bin/sh
+    set -eu
     cd "{{ THISDIR }}/spec"
-    set -x
-    go run "github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@v${OAPI_CODEGEN_VERSION}" -config cfg.yaml wfx.openapiv3.yml
+    go tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen -config cfg.yaml wfx.openapiv3.yml
 
 _generate-ent:
     #!/usr/bin/env bash
     set -euxo pipefail
-    ENT_VERSION=$(grep entgo.io/ent "{{ THISDIR }}/go.mod" | awk -F' ' '{ print $2; }')
     cd "{{ THISDIR }}/generated/ent"
     find . -not -name generate.go -and -not -name main.go -and -not -path "**/schema/*" -type f -delete
-    go run entgo.io/ent/cmd/ent@${ENT_VERSION} generate --header \
+    go tool entgo.io/ent/cmd/ent generate --header \
         "// SPDX-FileCopyrightText: The entgo authors
          // SPDX-License-Identifier: Apache-2.0
 
