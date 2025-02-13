@@ -32,9 +32,9 @@ for Embedded Linux Devices.&lt;/li>
 &lt;h2 id="workflows">Workflows&lt;/h2>
 &lt;p>Currently, the DAU Workflow Family comprises two workflows that model the software update process for devices:&lt;/p>
 &lt;p>The 
-&lt;a href="/wfx.workflow.dau.direct.yml">&lt;code>wfx.workflow.dau.direct&lt;/code>&lt;/a> workflow caters for the fully automated software update
+&lt;a href="./wfx.workflow.dau.direct.yml">&lt;code>wfx.workflow.dau.direct&lt;/code>&lt;/a> workflow caters for the fully automated software update
 use case while the 
-&lt;a href="/wfx.workflow.dau.phased.yml">&lt;code>wfx.workflow.dau.phased&lt;/code>&lt;/a> workflow operates in distinct phases
+&lt;a href="./wfx.workflow.dau.phased.yml">&lt;code>wfx.workflow.dau.phased&lt;/code>&lt;/a> workflow operates in distinct phases
 requiring external input to advance the workflow.&lt;/p></description></item><item><title>Operations</title><link>/docs/operations/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/operations/</guid><description>&lt;h2 id="api">API&lt;/h2>
 &lt;p>wfx provides two RESTful APIs to interact with it: the northbound operator/management interface and the southbound
 interface used by clients as illustrated in the following figure:&lt;/p>
@@ -74,7 +74,7 @@ such client exists yet, this implies writing custom code.&lt;/p>
 &lt;h2 id="software-update">Software Update&lt;/h2>
 &lt;p>Perform over-the-air (OTA) firmware updates using 
 &lt;a href="https://swupdate.org/" target="_blank">SWUpdate&lt;/a> and the 
-&lt;a href="/docs/workflows/dau/">Device Artifact Update
+&lt;a href="./docs/workflows/dau/">Device Artifact Update
 (DAU) Workflow Family&lt;/a>. See also SWUpdate&amp;rsquo;s 
 &lt;a href="https://github.com/sbabic/swupdate/blob/master/doc/source/suricatta.rst#support-for-wfx" target="_blank">Suricatta
 documentation&lt;/a>.&lt;/p></description></item></channel></rss>

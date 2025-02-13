@@ -61,7 +61,7 @@ such client exists yet, this implies writing custom code.&lt;/p>
 &lt;h2 id="software-update">Software Update&lt;/h2>
 &lt;p>Perform over-the-air (OTA) firmware updates using 
 &lt;a href="https://swupdate.org/" target="_blank">SWUpdate&lt;/a> and the 
-&lt;a href="/docs/workflows/dau/">Device Artifact Update
+&lt;a href="../docs/workflows/dau/">Device Artifact Update
 (DAU) Workflow Family&lt;/a>. See also SWUpdate&amp;rsquo;s 
 &lt;a href="https://github.com/sbabic/swupdate/blob/master/doc/source/suricatta.rst#support-for-wfx" target="_blank">Suricatta
 documentation&lt;/a>.&lt;/p></description></item></channel></rss>
