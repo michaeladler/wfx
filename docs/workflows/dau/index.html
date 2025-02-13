@@ -97,20 +97,20 @@ that can be of any form such as, e.g., firmware disk images, container images, o
 has to take care to only assign jobs to devices that are known to be able to digest this type of update artifact. wfx
 doesn&rsquo;t exercise any checks on compatibility.</p><p>An exemplary job for a device called <code>example</code> (utilizing the
 <a href=../../../docs/configuration/#file-server>built-in simple file
-server</a>) may be created as follows:</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#f6f8fa;background-color:#82071e>cat</span> <span style=color:#f6f8fa;background-color:#82071e>&lt;&lt;EOF</span> <span style=color:#f6f8fa;background-color:#82071e>|</span> <span style=color:#f6f8fa;background-color:#82071e>wfxctl</span> <span style=color:#f6f8fa;background-color:#82071e>job</span> <span style=color:#f6f8fa;background-color:#82071e>create</span> <span style=color:#f6f8fa;background-color:#82071e>--client-id</span> <span style=color:#f6f8fa;background-color:#82071e>example</span> <span style=color:#f6f8fa;background-color:#82071e>--workflow</span> <span style=color:#f6f8fa;background-color:#82071e>wfx.workflow.dau.direct</span> <span style=color:#f6f8fa;background-color:#82071e>-</span>
-</span></span><span style=display:flex><span><span style=color:#1f2328>{</span>
-</span></span><span style=display:flex><span>  <span style=color:#0550ae>&#34;version&#34;</span><span style=color:#1f2328>:</span> <span style=color:#0a3069>&#34;1.0&#34;</span><span style=color:#1f2328>,</span>
-</span></span><span style=display:flex><span>  <span style=color:#0550ae>&#34;type&#34;</span><span style=color:#1f2328>:</span> <span style=color:#1f2328>[</span><span style=color:#0a3069>&#34;firmware&#34;</span><span style=color:#1f2328>],</span>
-</span></span><span style=display:flex><span>  <span style=color:#0550ae>&#34;artifacts&#34;</span><span style=color:#1f2328>:</span> <span style=color:#1f2328>[</span>
-</span></span><span style=display:flex><span>    <span style=color:#1f2328>{</span>
-</span></span><span style=display:flex><span>      <span style=color:#0550ae>&#34;name&#34;</span><span style=color:#1f2328>:</span> <span style=color:#0a3069>&#34;Example Device Firmware Artifact&#34;</span><span style=color:#1f2328>,</span>
-</span></span><span style=display:flex><span>      <span style=color:#0550ae>&#34;version&#34;</span><span style=color:#1f2328>:</span> <span style=color:#0a3069>&#34;1.1&#34;</span><span style=color:#1f2328>,</span>
-</span></span><span style=display:flex><span>      <span style=color:#0550ae>&#34;uri&#34;</span><span style=color:#1f2328>:</span> <span style=color:#0a3069>&#34;http://wfx.host:8080/download/example_artifact.swu&#34;</span>
-</span></span><span style=display:flex><span>    <span style=color:#1f2328>}</span>
-</span></span><span style=display:flex><span>  <span style=color:#1f2328>]</span>
-</span></span><span style=display:flex><span><span style=color:#1f2328>}</span>
-</span></span><span style=display:flex><span><span style=color:#f6f8fa;background-color:#82071e>EOF</span>
-</span></span></code></pre></div><p>The <code>type</code> list field allows to label update jobs. Labels may be used by wfx&rsquo;s on-device counterpart to determine the
+server</a>) may be created as follows:</p><pre><code>cat &lt;&lt;EOF | wfxctl job create --client-id example --workflow wfx.workflow.dau.direct -
+{
+  &quot;version&quot;: &quot;1.0&quot;,
+  &quot;type&quot;: [&quot;firmware&quot;],
+  &quot;artifacts&quot;: [
+    {
+      &quot;name&quot;: &quot;Example Device Firmware Artifact&quot;,
+      &quot;version&quot;: &quot;1.1&quot;,
+      &quot;uri&quot;: &quot;http://wfx.host:8080/download/example_artifact.swu&quot;
+    }
+  ]
+}
+EOF
+</code></pre><p>The <code>type</code> list field allows to label update jobs. Labels may be used by wfx&rsquo;s on-device counterpart to determine the
 activation action(s) to execute since, e.g., container images need a different activation action than firmware disk
 images or a configuration change.</p><p>In the preceding example, the presence of the <code>firmware</code> label may be used to instruct the on-device client to
 test-reboot into the new firmware.</p><p>Since wfx isn&rsquo;t concerned with the job definition except for conveying it to the device, it can be adapted to specific
