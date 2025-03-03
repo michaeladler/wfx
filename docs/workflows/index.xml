@@ -8,7 +8,7 @@ for Embedded Linux Devices.&lt;/li>
 &lt;h2 id="workflows">Workflows&lt;/h2>
 &lt;p>Currently, the DAU Workflow Family comprises two workflows that model the software update process for devices:&lt;/p>
 &lt;p>The 
-&lt;a href="/wfx.workflow.dau.direct.yml">&lt;code>wfx.workflow.dau.direct&lt;/code>&lt;/a> workflow caters for the fully automated software update
+&lt;a href="../../wfx.workflow.dau.direct.yml">&lt;code>wfx.workflow.dau.direct&lt;/code>&lt;/a> workflow caters for the fully automated software update
 use case while the 
-&lt;a href="/wfx.workflow.dau.phased.yml">&lt;code>wfx.workflow.dau.phased&lt;/code>&lt;/a> workflow operates in distinct phases
+&lt;a href="../../wfx.workflow.dau.phased.yml">&lt;code>wfx.workflow.dau.phased&lt;/code>&lt;/a> workflow operates in distinct phases
 requiring external input to advance the workflow.&lt;/p></description></item></channel></rss>
