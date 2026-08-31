@@ -27,6 +27,11 @@
       "ci"
     ];
 
+    secured = {
+      extends = [ "fullstack" ];
+      module = import ./contrib/secured-deployment/devenv.nix;
+    };
+
     backend.module = {
       env.CC = "${config.devenv.root}/.ci/zcc";
 

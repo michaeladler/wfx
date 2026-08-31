@@ -1,0 +1,131 @@
+# SPDX-FileCopyrightText: 2026 Siemens AG
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Author: Michael Adler <michael.adler@siemens.com>
+---
+server:
+  address: tcp://127.0.0.1:9091
+
+log:
+  level: info
+  format: text
+
+authentication_backend:
+  file:
+    path: '@STATE@/authelia-users.yml'
+    watch: false
+    extra_attributes:
+      wfx_client_id:
+        multi_valued: false
+        value_type: string
+
+access_control:
+  default_policy: one_factor
+
+session:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  cookies:
+    - domain: authelia.localhost
+      authelia_url: https://authelia.localhost:8443
+      same_site: lax
+
+storage:
+  local:
+    path: '@STATE@/authelia.sqlite3'
+
+notifier:
+  filesystem:
+    filename: '@STATE@/authelia-notifications.txt'
+
+identity_providers:
+  oidc:
+    jwks:
+      - key: |
+          {{- fileContent "@STATE@/certs/oidc-signing.local/key.pem" | nindent 10 }}
+        certificate_chain: |
+          {{- fileContent "@STATE@/certs/oidc-signing.local/cert.pem" | nindent 10 }}
+    claims_policies:
+      wfx:
+        id_token:
+          - https://siemens.github.io/wfx/client-id
+        access_token:
+          - groups
+          - https://siemens.github.io/wfx/client-id
+        custom_claims:
+          wfx_client_id:
+            name: https://siemens.github.io/wfx/client-id
+            attribute: wfx_client_id
+    scopes:
+      write:jobs:
+        claims:
+          - https://siemens.github.io/wfx/client-id
+    clients:
+      - client_id: wfx-ui
+        client_name: wfx UI
+        public: true
+        redirect_uris:
+          - https://wfx-mgmt.localhost:8443/ui/
+        audience:
+          - wfx-ui
+        requested_audience_mode: implicit
+        scopes:
+          - openid
+          - profile
+          - email
+          - groups
+          - offline_access
+          - write:jobs
+        grant_types:
+          - authorization_code
+          - refresh_token
+        response_types:
+          - code
+        require_pkce: true
+        pkce_challenge_method: S256
+        token_endpoint_auth_method: none
+        access_token_signed_response_alg: RS256
+        claims_policy: wfx
+        authorization_policy: one_factor
+        consent_mode: implicit
+      - client_id: wfxctl
+        client_name: wfxctl
+        public: true
+        audience:
+          - wfx-ui
+        requested_audience_mode: implicit
+        scopes:
+          - openid
+          - profile
+          - email
+          - groups
+          - write:jobs
+        redirect_uris:
+          - http://localhost:9876/callback
+        grant_types:
+          - authorization_code
+        response_types:
+          - code
+        require_pkce: true
+        pkce_challenge_method: S256
+        token_endpoint_auth_method: none
+        access_token_signed_response_alg: RS256
+        claims_policy: wfx
+        authorization_policy: one_factor
+        consent_mode: implicit
+      - client_id: wfx-proxy
+        client_name: wfx oauth2-proxy
+        client_secret: '{{ secret "@STATE@/oauth2-client-secret-digest" }}'
+        redirect_uris:
+          - https://wfx-mgmt.localhost:8443/oauth2/callback
+        scopes:
+          - openid
+          - profile
+          - email
+          - groups
+          - write:jobs
+        claims_policy: wfx
+        authorization_policy: one_factor
+        consent_mode: implicit

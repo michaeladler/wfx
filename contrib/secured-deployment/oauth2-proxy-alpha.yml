@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: 2026 Siemens AG
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Author: Michael Adler <michael.adler@siemens.com>
+---
+server:
+  bindAddress: 127.0.0.1:4180
+
+upstreamConfig:
+  upstreams:
+    - id: static
+      path: /
+      static: true
+      staticCode: 202
+
+injectResponseHeaders:
+  - name: X-Client-Id
+    values:
+      - claimSource:
+          claim: https://siemens.github.io/wfx/client-id
+
+providers:
+  - id: authelia
+    provider: oidc
+    clientID: wfx-proxy
+    clientSecretFile: '@STATE@/oauth2-client-secret'
+    code_challenge_method: S256
+    scope: openid profile email groups write:jobs
+    allowedGroups:
+      - wfx
+    caFiles:
+      - '@STATE@/certs/minica.pem'
+    oidcConfig:
+      issuerURL: https://authelia.localhost:8443
+      insecureSkipNonce: false
+      extraAudiences:
+        - wfx-ui
+      enabledSigningAlgs:
+        - RS256
+    skipClaimsFromProfileURL: true
+    additionalClaims:
+      - https://siemens.github.io/wfx/client-id
