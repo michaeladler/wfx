@@ -1,0 +1,70 @@
+# SPDX-FileCopyrightText: 2026 Siemens AG
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Author: Michael Adler <michael.adler@siemens.com>
+
+# Generate local secrets, credentials, and certificates.
+bootstrap:
+    ./bootstrap.py
+
+clean:
+    rm -rf state
+
+# Launch Firefox with an isolated profile that trusts the local CA.
+browser:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    profile="state/firefox"
+    mkdir -p "$profile"
+    certutil -N -d "sql:$profile" --empty-password 2>/dev/null || true
+    certutil -D -d "sql:$profile" -n "wfx local CA" 2>/dev/null || true
+    certutil -A -d "sql:$profile" -n "wfx local CA" -t "C,," -i state/certs/ca.pem
+    echo "Login with user: wfx-admin, pass: wfx-admin
+
+    Press <ctrl-c> to quit..."
+    exec firefox --no-remote --profile "$profile" https://wfx-mgmt.localhost:8443/ui/
+
+_get-tokens AUD:
+    @oauth2c https://authelia.localhost:8443 \
+      --client-id wfxctl \
+      --grant-type authorization_code \
+      --response-types code \
+      --auth-method none \
+      --audience {{ AUD }} \
+      --scopes openid,profile,email,groups,offline_access,read:jobs,write:jobs \
+      --tls-root-ca state/certs/ca.pem \
+      --no-browser \
+      --pkce \
+      --silent
+
+get-wfx-ui-tokens:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Login with user: wfx-admin, pass: wfx-admin" 1>&2
+    just _get-tokens wfx-northbound-api
+
+get-wfx-client-1-tokens:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Login with user: wfx-client-1, pass: wfx-client-1" 1>&2
+    just _get-tokens wfx-southbound-api
+
+get-wfx-client-2-tokens:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Login with user: wfx-client-2, pass: wfx-client-2" 1>&2
+    just _get-tokens wfx-southbound-api
+
+refresh-tokens FILE:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    token="$(jq -r .refresh_token {{ FILE }})"
+    oauth2c https://authelia.localhost:8443 \
+      --client-id wfxctl \
+      --grant-type refresh_token \
+      --auth-method none \
+      --tls-root-ca state/certs/ca.pem \
+      --silent \
+      --refresh-token "$token" >"{{ FILE }}.new"
+    mv "{{ FILE }}.new" "{{ FILE }}"
