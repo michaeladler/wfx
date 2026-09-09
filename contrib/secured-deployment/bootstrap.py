@@ -78,20 +78,22 @@ if not secrets_file.is_file():
 else:
     logger.debug("%s already exists, skipping", secrets_file.name)
 
-credentials = (
-    state / "oauth2-client-secret",
-    state / "oauth2-client-secret-digest",
+client_credentials = (
+    "oauth2-client-secret",
+    "wfxctl-client-secret",
+    "wfx-client-1-secret",
+    "wfx-client-2-secret",
 )
-if not all(path.is_file() for path in credentials):
-    logger.info("Generating OAuth2 client secrets")
-    client_secret = random_base64(32)
-    write_private(state / "oauth2-client-secret", client_secret)
-    write_private(
-        state / "oauth2-client-secret-digest",
-        f"{password_digest(client_secret)}\n",
-    )
-else:
-    logger.debug("OAuth2 client secrets already exist, skipping")
+for name in client_credentials:
+    secret_path = state / name
+    digest_path = state / f"{name}-digest"
+    if not (secret_path.is_file() and digest_path.is_file()):
+        logger.info("Generating secret for %s", name)
+        secret_val = random_base64(32)
+        write_private(secret_path, secret_val)
+        write_private(digest_path, f"{password_digest(secret_val)}\n")
+    else:
+        logger.debug("Secret %s already exists, skipping", name)
 
 
 def check_certs(certs_dir, cert_files):
@@ -248,6 +250,9 @@ logger.info("Setting file permissions")
 for path in (
     "secrets.env", "users.yml",
     "oauth2-client-secret", "oauth2-client-secret-digest",
+    "wfxctl-client-secret", "wfxctl-client-secret-digest",
+    "wfx-client-1-secret", "wfx-client-1-secret-digest",
+    "wfx-client-2-secret", "wfx-client-2-secret-digest",
 ):
     (state / path).chmod(0o600)
 for path in certs.glob("*key.pem"):
