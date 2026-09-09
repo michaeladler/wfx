@@ -15,19 +15,3 @@ users:
     email: wfx-admin@local
     picture: https://wfx-mgmt.localhost:8443/ui/logo.svg
     groups: [wfx]
-  wfx-client-1:
-    disabled: false
-    displayname: WFX Client 1
-    password: $pbkdf2-sha512$310000$mi9tClt.BSh/U1LZh.j3Tw$/rj4Daj6x.HV8pkBPhTKpPJTU8PigAASZ4aod57lPnuWWxJr/4zfnW2DZxaDA3e97oQAhbq0mjqhKjDttfBcJw
-    email: wfx-client-1@local
-    groups: [wfx]
-    extra:
-      wfx_client_id: 3eb9312f-1d86-4669-a3e7-ccc69edb1dc0
-  wfx-client-2:
-    disabled: false
-    displayname: WFX Client 2
-    password: $pbkdf2-sha512$310000$X5zZL1e75hSrwMEorB5LSQ$Iqtvz9Zi34Qt4u9XmCoAK8fffCEoo9d5.6dmVul7v3nACcnszZPARRHq7z55d7BfrytVx52jUxtp06Vv2b.LqQ
-    email: wfx-client-2@local
-    groups: [wfx]
-    extra:
-      wfx_client_id: 78b062b5-0f10-48d3-bfa5-6a79d44a6d8b

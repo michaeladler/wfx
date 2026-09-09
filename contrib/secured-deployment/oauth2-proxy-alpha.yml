@@ -18,7 +18,7 @@ injectResponseHeaders:
   - name: X-Client-Id
     values:
       - claimSource:
-          claim: https://siemens.github.io/wfx/client-id
+          claim: client_id
   - name: X-Accel-Redirect
     values:
       - claimSource:
@@ -36,8 +36,6 @@ providers:
     clientSecretFile: '@STATE@/oauth2-client-secret'
     code_challenge_method: S256
     scope: openid profile email groups read:jobs write:jobs
-    allowedGroups:
-      - wfx
     caFiles:
       - '@STATE@/certs/ca.pem'
     oidcConfig:
@@ -52,4 +50,4 @@ providers:
     additionalClaims:
       - aud
       - scp
-      - https://siemens.github.io/wfx/client-id
+      - client_id
